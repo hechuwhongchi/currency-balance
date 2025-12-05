@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Value of Currency Balance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #D4AF37;
+            --deep-navy: #1a1a2e;
+            --rich-burgundy: #6b2c3e;
+            --elegant-cream: #f4f1e8;
+            --accent-copper: #b87333;
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, var(--deep-navy) 0%, var(--rich-burgundy) 100%);
+            color: var(--elegant-cream);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 3rem;
+            z-index: 1000;
+            box-shadow: 0 4px 20px var(--shadow-dark);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar.scrolled {
+            padding: 1rem 3rem;
+            background: rgba(26, 26, 46, 0.98);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            letter-spacing: 1.5px;
+            transition: all 0.3s ease;
+            line-height: 1.4;
+        }
+
+        .logo:hover {
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--elegant-cream);
+            text-decoration: none;
+            font-size: 1.05rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gold);
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-gold);
+        }
+
+        .section {
+            min-height: 100vh;
+            padding: 8rem 3rem 4rem;
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .section.animate-in {
+            animation: fadeInSection 0.6s ease forwards;
+        }
+
+        @keyframes fadeInSection {
+            from {
+                opacity: 0.7;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 4rem;
+            box-shadow: 0 20px 60px var(--shadow-dark);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px var(--shadow-dark);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: var(--primary-gold);
+            margin-bottom: 2rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: fadeInDown 1s ease;
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            color: var(--primary-gold);
+            margin-bottom: 2rem;
+            text-align: center;
+            border-bottom: 3px solid var(--accent-copper);
+            padding-bottom: 1rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            color: var(--accent-copper);
+            margin: 2.5rem 0 1.5rem;
+        }
+
+        p {
+            font-size: 1.15rem;
+            margin-bottom: 1.5rem;
+            text-align: justify;
+            color: var(--elegant-cream);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 10rem 3rem 6rem;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            background: linear-gradient(135deg, var(--primary-gold), var(--accent-copper));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1.2s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--elegant-cream);
+            margin-bottom: 3rem;
+            font-style: italic;
+            animation: fadeInUp 1.4s ease;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 2.5rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 2px solid transparent;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--primary-gold);
+            background: rgba(212, 175, 55, 0.1);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            color: var(--primary-gold);
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .profile-role {
+            color: var(--accent-copper);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .profile-care {
+            font-size: 1rem;
+            color: var(--elegant-cream);
+            font-style: italic;
+        }
+
+        .analysis-content {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 2.5rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border-left: 4px solid var(--primary-gold);
+            transition: all 0.4s ease;
+        }
+
+        .analysis-content:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-left-width: 8px;
+            padding-left: 3rem;
+        }
+
+        .solution-item {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(184, 115, 51, 0.1));
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: all 0.4s ease;
+        }
+
+        .solution-item:hover {
+            transform: translateX(10px);
+            box-shadow: -5px 5px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .citation {
+            font-size: 0.95rem;
+            color: var(--accent-copper);
+            font-style: italic;
+            margin-top: 1rem;
+            padding-left: 1.5rem;
+            border-left: 3px solid var(--accent-copper);
+        }
+
+        .source-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .source-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-gold);
+            transition: all 0.3s ease;
+        }
+
+        .source-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+        }
+
+        .source-item a {
+            color: var(--accent-copper);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .source-item a:hover {
+            color: var(--primary-gold);
+            text-decoration: underline;
+        }
+
+        .credits {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(0, 0, 0, 0.3);
+            margin-top: 4rem;
+            border-radius: 15px;
+            border: 2px solid var(--primary-gold);
+        }
+
+        .credits-text {
+            font-size: 1.8rem;
+            color: var(--primary-gold);
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+                display: none;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            h1, .hero-title {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 2rem;
+            }
+
+            .section {
+                padding: 6rem 1.5rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">The Value of Currency Balance<br><span style="font-size: 0.7em; color: var(--accent-copper);">BSA 1-03</span></div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#profile">Profile</a></li>
+                <li><a href="#analysis">Analysis</a></li>
+                <li><a href="#solutions">Solutions</a></li>
+                <li><a href="#sources">Sources</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="hero section">
+        <h1 class="hero-title">The Value of Currency Balance</h1>
+        <p class="hero-subtitle">Understanding the Philippine Peso's Role in Economic Stability</p>
+        <div class="container">
+            <p>The Philippine peso serves as the cornerstone of the nation's economic identity and stability. In an increasingly interconnected global economy, understanding currency valuation and exchange rate management has become critical for both policymakers and citizens. The peso's value against international currencies, particularly the US dollar, influences everything from the cost of imported goods to the purchasing power of remittances sent home by millions of overseas Filipino workers.</p>
+            <p>The question of whether to raise or lower currency values is not merely a technical decision but one that affects the daily lives of Filipinos, impacts business competitiveness, and shapes the country's economic trajectory. This website explores the complexities of currency balance in the Philippine context, examining how monetary authorities navigate the delicate equilibrium between exchange rate stability and economic growth.</p>
+        </div>
+    </section>
+
+    <section id="profile" class="section">
+        <div class="container">
+            <h2>Website Owners' Profile</h2>
+            <div class="profile-grid">
+                <div class="profile-card">
+                    <div class="profile-name">Team Member 1</div>
+                    <div class="profile-role">Research Lead</div>
+                    <div class="profile-care">Self-Care Practice: Regular morning meditation and journaling to maintain mental clarity and focus for complex economic analysis.</div>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-name">Team Member 2</div>
+                    <div class="profile-role">Content Strategist</div>
+                    <div class="profile-care">Self-Care Practice: Evening walks and reading financial literature to stay informed while maintaining work-life balance.</div>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-name">Team Member 3</div>
+                    <div class="profile-role">Data Analyst</div>
+                    <div class="profile-care">Self-Care Practice: Weekend outdoor activities and exercise routines to stay physically active and mentally refreshed.</div>
+                </div>
+                <div class="profile-card">
+                    <div class="profile-name">Team Member 4</div>
+                    <div class="profile-role">Design Specialist</div>
+                    <div class="profile-care">Self-Care Practice: Creative hobbies like painting and music to foster innovation and reduce stress from academic pressures.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="analysis" class="section">
+        <div class="container">
+            <h2>Analysis: The Currency Balance Issue</h2>
+
+            <div class="analysis-content">
+                <h3>Understanding the Philippine Peso's Performance</h3>
+                <p>The Philippine peso has experienced significant fluctuations in recent years, reflecting broader economic challenges and global monetary dynamics. According to data from the Bangko Sentral ng Pilipinas, the exchange rate ended 2024 at approximately 57.84 pesos per US dollar, compared to 55.38 at the end of 2023, representing a depreciation that has raised concerns among policymakers and economists.</p>
+                <p class="citation">Source: Bangko Sentral ng Pilipinas (BSP) Exchange Rate Statistics, 2024</p>
+                
+                <p>The depreciation trend is not isolated to recent years. Over the past decade, the peso has weakened substantially from around 44.73 per dollar in 2014. In May 2024, the currency crossed the psychologically significant 58-per-dollar threshold, prompting BSP Governor Eli Remolona to announce that authorities would intervene when necessary to smooth excessive volatility and restore order during periods of stress.</p>
+                <p class="citation">Source: Bloomberg News, "Philippine Peso Drops Past Key 58 Level," May 2024</p>
+            </div>
+
+            <div class="analysis-content">
+                <h3>The Inflation-Exchange Rate Relationship</h3>
+                <p>A critical aspect of currency balance concerns how peso depreciation affects inflation. Research by the ASEAN+3 Macroeconomic Research Office reveals that the impact of peso depreciation on inflation is more modest than commonly assumed. Their analysis indicates that a one percent depreciation of the peso against the US dollar leads to only a 0.043 percentage point increase in consumer price inflation in the short term, and 0.086 percentage point over a one-year period.</p>
+                <p class="citation">Source: ASEAN+3 Macroeconomic Research Office (AMRO), "Peso Depreciation: The Culprit Driving up Philippine Inflation?", January 2025</p>
+
+                <p>This subdued pass-through effect demonstrates the credibility of BSP's monetary policy framework in anchoring inflation expectations. Despite the peso depreciating by 10.5 percent in 2022 and another 4.2 percent in 2024, inflation has remained largely within the BSP's target range of 2 to 4 percent, settling at 3.2 percent for 2024.</p>
+                <p class="citation">Source: Bangko Sentral ng Pilipinas Monetary Policy Report, February 2025</p>
+            </div>
+
+            <div class="analysis-content">
+                <h3>The Role of Overseas Remittances</h3>
+                <p>Overseas Filipino Worker remittances play a vital stabilizing role in the Philippine currency ecosystem. In 2024, OFW remittances reached a record high of $38.34 billion, representing approximately 8.3 percent of the country's gross domestic product and 7.4 percent of gross national income. These inflows provide crucial foreign currency supply that helps support the peso and offset current account deficits.</p>
+                <p class="citation">Source: Bangko Sentral ng Pilipinas Press Release, February 2025; Philippine News Agency</p>
+
+                <p>The United States, Saudi Arabia, Singapore, and the United Arab Emirates remain the primary sources of remittances. This consistent inflow of foreign currency acts as a buffer against more severe depreciation pressures and provides stability to household incomes, particularly during economic uncertainty. Remittances boost consumer spending, which accounts for approximately 70 percent of the domestic economy's output.</p>
+                <p class="citation">Source: Rizal Commercial Banking Corporation Economic Analysis, 2024</p>
+            </div>
+
+            <div class="analysis-content">
+                <h3>Monetary Policy Considerations</h3>
+                <p>The BSP's approach to currency management operates within an inflation-targeting framework rather than defending a specific exchange rate level. BSP maintained its key policy rate at 6.25 percent during much of 2023 before beginning a gradual easing cycle in late 2024, reducing rates to 5.75 percent by year-end. This monetary policy stance prioritizes price stability while allowing the exchange rate to be determined primarily by market forces.</p>
+                <p class="citation">Source: Bangko Sentral ng Pilipinas Monetary Policy Reports, May 2023 and February 2025</p>
+
+                <p>Governor Remolona has signaled that future policy decisions will remain data-dependent, balancing the need for economic growth stimulus against inflation risks and exchange rate stability. The central bank projects inflation to average around 3.3 percent in 2025 and 3.7 percent in 2026, remaining within the target band.</p>
+                <p class="citation">Source: Manila Bulletin, "Peso's Roller-Coaster Ride," October 2024</p>
+            </div>
+
+            <div class="analysis-content">
+                <h3>Competing Perspectives on Currency Valuation</h3>
+                <p><strong>Argument for a Weaker Peso:</strong> Some economists argue that a moderately weaker peso can benefit the Philippine economy by making exports more competitive internationally and increasing the peso value of remittances received by families. A weaker currency theoretically supports export-oriented industries and outsourcing businesses that earn foreign currency.</p>
+
+                <p><strong>Argument for a Stronger Peso:</strong> Conversely, proponents of peso strength emphasize that depreciation increases the cost of imported goods, including fuel, raw materials, and essential commodities. Given the Philippines' position as a net importer and its vulnerability to imported inflation, a stronger peso helps maintain purchasing power for consumers and reduces the cost of servicing foreign-denominated debt.</p>
+
+                <p><strong>The Balanced Approach:</strong> The BSP's current framework represents a middle path, allowing market forces to determine the exchange rate while intervening only to prevent excessive volatility. This approach aims to maintain credibility in monetary policy while avoiding the costly defense of unsustainable currency pegs that have failed in other economies.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="solutions" class="section">
+        <div class="container">
+            <h2>Solutions and Recommendations</h2>
+
+            <div class="solution-item">
+                <h3>1. Strengthen the Inflation-Targeting Framework</h3>
+                <p>The BSP should continue refining its inflation-targeting approach, ensuring that monetary policy decisions remain transparent, data-driven, and well-communicated to anchor inflation expectations. The existing target range of 2 to 4 percent has proven effective and should be maintained through 2028 as currently planned. Enhanced communication strategies can help the public understand that exchange rate fluctuations are normal in a floating system and do not necessarily signal economic crisis.</p>
+            </div>
+
+            <div class="solution-item">
+                <h3>2. Build Adequate Foreign Exchange Reserves</h3>
+                <p>Maintaining robust international reserves provides the BSP with ammunition to intervene during periods of excessive volatility without compromising the fundamentally market-determined nature of the exchange rate. The government should continue policies that attract foreign direct investment and support export competitiveness to build reserve buffers. Diversifying reserve holdings across currencies and assets can also provide additional stability.</p>
+            </div>
+
+            <div class="solution-item">
+                <h3>3. Enhance Economic Fundamentals</h3>
+                <p>Sustainable currency stability ultimately depends on strong economic fundamentals rather than intervention. The government should prioritize policies that improve productivity, enhance infrastructure, reduce the cost of doing business, and develop high-value industries. Addressing structural current account deficits through export promotion and import substitution where economically viable would reduce pressure on the currency over the long term.</p>
+            </div>
+
+            <div class="solution-item">
+                <h3>4. Protect and Facilitate Remittance Flows</h3>
+                <p>Given the critical role of OFW remittances in supporting the peso and household incomes, policies should ensure that remittance channels remain efficient, affordable, and secure. This includes promoting competition among remittance service providers to reduce transaction costs, expanding digital payment infrastructure to reach rural areas, and maintaining diplomatic relationships that protect OFW welfare and employment opportunities abroad.</p>
+            </div>
+
+            <div class="solution-item">
+                <h3>5. Develop Financial Literacy Programs</h3>
+                <p>Public education initiatives should help Filipinos understand exchange rate dynamics, inflation mechanisms, and monetary policy functions. Better financial literacy enables households and businesses to make informed decisions regarding currency exposure, savings strategies, and investment choices. This understanding also builds public support for sound but sometimes unpopular monetary policy decisions.</p>
+            </div>
+
+            <div class="solution-item">
+                <h3>6. Coordinate Fiscal and Monetary Policy</h3>
+                <p>The government should maintain fiscal discipline to complement the BSP's monetary policy efforts. Sustainable government finances reduce inflationary pressures and external borrowing needs that can weaken the currency. The Development Budget Coordination Committee should continue its collaborative approach to ensure policy coherence across economic agencies.</p>
+            </div>
+
+            <div class="solution-item">
+                <h3>7. Monitor and Address Structural Vulnerabilities</h3>
+                <p>Policymakers should remain vigilant regarding structural vulnerabilities that affect currency stability, including the persistent current account deficit, energy import dependence, and food security challenges. Developing renewable energy capacity, improving agricultural productivity, and promoting technological innovation can reduce external vulnerabilities that pressure the peso during global shocks.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="sources" class="section">
+        <div class="container">
+            <h2>Credible Sources</h2>
+            <ul class="source-list">
+                <li class="source-item">
+                    <strong>1. Bangko Sentral ng Pilipinas (BSP)</strong><br>
+                    Exchange Rate Statistics and Monetary Policy Reports (2023-2025)<br>
+                    <a href="https://www.bsp.gov.ph/statistics/external/exchrates.aspx" target="_blank">https://www.bsp.gov.ph/statistics/external/exchrates.aspx</a><br>
+                    Official central bank data on exchange rates, inflation forecasts, and monetary policy decisions.
+                </li>
+                <li class="source-item">
+                    <strong>2. ASEAN+3 Macroeconomic Research Office (AMRO)</strong><br>
+                    "Peso Depreciation: The Culprit Driving up Philippine Inflation?" (January 2025)<br>
+                    <a href="https://amro-asia.org/peso-depreciation-culprit-driving-up-philippine-inflation/" target="_blank">https://amro-asia.org/peso-depreciation-culprit-driving-up-philippine-inflation/</a><br>
+                    Academic research on exchange rate pass-through to inflation in the Philippines.
+                </li>
+                <li class="source-item">
+                    <strong>3. Philippine News Agency (PNA)</strong><br>
+                    Multiple reports on OFW remittances and BSP inflation forecasts (2024-2025)<br>
+                    <a href="https://www.pna.gov.ph" target="_blank">https://www.pna.gov.ph</a><br>
+                    Official government news service reporting on economic indicators and policy announcements.
+                </li>
+                <li class="source-item">
+                    <strong>4. Bloomberg News</strong><br>
+                    "Philippine Peso Drops Past Key 58 Level" (May 2024)<br>
+                    <a href="https://www.bloomberg.com" target="_blank">https://www.bloomberg.com</a><br>
+                    Financial news reporting on peso performance and BSP intervention statements.
+                </li>
+                <li class="source-item">
+                    <strong>5. Manila Bulletin / Malaya Business Insight</strong><br>
+                    Economic analysis and BSP policy coverage (2024-2025)<br>
+                    Philippine business publications providing expert economic commentary and analysis of monetary policy decisions, inflation trends, and currency movements.
+                </li>
+            </ul>
+
+            <div class="credits">
+                <p class="credits-text">BSA 1-03 INFONET</p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav-links a');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+                const sectionHeight = section.offsetHeight;
+                if (sectionTop < window.innerHeight * 0.75 && sectionTop > -sectionHeight * 0.5) {
+                    section.classList.add('animate-in');
+                }
+            });
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const targetId = link.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                
+                if (targetSection) {
+                    const offsetTop = targetSection.offsetTop - 80;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+                
+                return false;
+            });
+        });
+
+        sections[0].classList.add('animate-in');
+
+        // Ensure all content is immediately visible on load
+        setTimeout(() => {
+            sections.forEach(section => section.classList.add('animate-in'));
+        }, 100);
+
+        document.querySelectorAll('.profile-card, .analysis-content, .solution-item, .source-item').forEach(el => {
+            el.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+        });
+    </script>
+</body>
+</html>
